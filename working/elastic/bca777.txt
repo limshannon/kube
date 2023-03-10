@@ -1,0 +1,8 @@
+https://git.web.boeing.com/bketc_cc/bca_cc/CTAMY/-/tree/main/777/python_ws/script
+
+https://jupyter.apps.kcs4-pre-clt.k8s.boeing.com/login?next=%2Flab%2Ftree%2Fpython_ws%2F77XW_geo%2FMaven_Throughput_with_GeoLocation_working.ipynb 
+
+
+
+
+bketc

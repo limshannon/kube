@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: elk
+  name: elasticsearch-nodeport
+  labels:
+    app: elasticsearch
+spec:
+  type: NodePort
+  ports:
+    - nodePort: 30920
+      port: 9200
+      targetPort: 9200
+      protocol: TCP
+  selector:
+    app: elasticsearch

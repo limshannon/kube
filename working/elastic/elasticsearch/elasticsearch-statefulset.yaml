@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: elk
+  name: elasticsearch-node
+  labels:
+    app: elasticsearch
+    #role: data
+spec:
+  serviceName: "elasticsearch"
+  selector:
+    matchLabels:
+      app: elasticsearch
+  replicas: 1
+  setVmMaxMapCount: false
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - name: elasticsearch
+          image: sres.web.boeing.com:5000/elasticsearch/elasticsearch:8.5.3
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 4Gi
+              cpu: 1
+          env:
+            - name: CLUSTER_NAME
+              value: docker-cluster
+            - name: discovery.type
+              value: single-node
+            - name: "ES_JAVA_OPTS"
+              value: "-Xms2g -Xmx2g"
+          ports:
+            - name: rest
+              containerPort: 9200
+            - name: transport
+              containerPort: 9300
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+              readOnly: true
+              subPath: elasticsearch.yml
+            - name: elasticsearch-persistent-storage
+              mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: config
+          configMap:
+            name: elasticsearch-config
+  volumeClaimTemplates:
+  - metadata:
+      name: elasticsearch-persistent-storage
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: ocs-storagecluster-ceph-rbd
+      resources:
+        requests:
+          storage: 5Gi
+      persistentVolumeReclaimPolicy: Delete

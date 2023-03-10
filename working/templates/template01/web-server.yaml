@@ -1,0 +1,51 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: web-server
+  labels:
+    app: web-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-server
+  template:
+    metadata:
+      labels:
+        app: web-server
+    spec:
+      containers:
+      - image: sres.web.boeing.com:5000/boeing-image-examples/base-images/rhel-atomic-test:175718
+        name: web-server
+        ports:
+          - containerPort: 8000
+            protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: web-server-service
+  labels:
+    app: web-server
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: web-server
+  type: ClusterIP
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: web-server-route
+  labels:
+    app: web-server
+spec:
+  host: paal-web-server.apps.kcs4-td-ewd.k8s.boeing.com
+  port:
+    targetPort: 8000
+  to:
+    kind: Service
+    name: web-server-service

@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: elk
+  name: logstash-node
+  labels:
+    app: logstash
+    #role: data
+spec:
+  serviceName: "logstash"
+  selector:
+    matchLabels:
+      app: logstash
+  replicas: 1
+  setVmMaxMapCount: false
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+        - name: logstash
+          image: sres.web.boeing.com:5000/3472487/jupyterlogstash-2:0.5
+          imagePullPolicy: IfNotPresent
+          resources: 
+            requests:
+              cpu: 4000m
+              memory: 16Gi
+          ports:
+            - name: "tcp-beats"
+              containerPort: 5044
+            - name: http
+              containerPort: 9600
+            - name: jupyter-http
+              containerPort: 8888
+          env:
+          - name: CLUSTER_NAME
+            value: docker-cluster
+          - name: NB_TOKEN
+            value: bketc
+          - name: ES_HOSTS
+            value: "http://elasticsearch.apps.kcs4-prod-ewd.k8s.boeing.com/"
+          - name: ES_USER
+            value: "elastic"
+          - name: ES_PASSWORD
+            valueFrom:
+            secretKeyRef:
+              name: elasticsearch-es-elastic-user
+              key: elastic
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/share/logstash/config
+            - name: pipeline-volume
+              mountPath: /usr/share/logstash/pipeline
+            #- name: ca-certs
+            #  mountPath: /etc/logstash/certificates
+            #  readOnly: true
+            - name: logstash-persistent-storage
+              mountPath: /usr/share/logstash/data
+          #readinessProbe:
+          #  httpGet:
+          #    path: /api/status
+          #    port: http
+          #  initialDelaySeconds: 20
+          #  timeoutSeconds: 5
+      volumes:
+        - name: config-volume
+          configMap:
+            name: logstash-config
+        - name: pipeline-volume
+          configMap:
+            name: logstash-pipeline
+        #- name: ca-certs
+        #  secret:
+        #    secretName: elasticsearch-es-http-certs-public
+        #- name: logstash_pvc
+        #  persistentVolumeClaim:
+        #    claimName: logstash-persistent-storage
+  volumeClaimTemplates:
+  - metadata:
+      name: logstash-persistent-storage
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: ocs-storagecluster-ceph-rbd
+      resources:
+        requests:
+          storage: 3Gi
+      persistentVolumeReclaimPolicy: Delete

@@ -1,0 +1,18 @@
+docker build --build-arg SRES_BEMSID=3472487 --build-arg SRES_API_KEY=cmVmdGtuOjAxOjE3MDk2MDU3NDA6aERRUHVuMFRRRnRtaGdBaXF1MlFTelVtWGpZ -t sres.web.boeing.com:5000/3472487/jupyterlogstash-1:0.1 .
+
+
+docker build --build-arg SRES_BEMSID=3472487 --build-arg SRES_API_KEY=cmVmdGtuOjAxOjE3MDk2MDU3NDA6aERRUHVuMFRRRnRtaGdBaXF1MlFTelVtWGpZ -t sres.web.boeing.com:5000/3472487/jupyterlogstash-2:0.4 .
+
+docker push sres.web.boeing.com:5000/3472487/jupyterlogstash-2:0.4
+oc expose service logstash --hostname=jupyter-logstash.apps.kcs4-prod-ewd.k8s.boeing.com
+
+
+192.168.234.94:9200
+curl -s elastic:bketc123@192.168.151.119:9200
+
+logstash --path.settings=/etc/logstash/logstash.yml -e "input { stdin { } } output { stdout {} }"
+
+logstash -f /workspace/bca_777/data_test/example_logstash.conf
+
+--no-cache .
+https://github.com/elastic/cloud-on-k8s/blob/main/config/recipes/logstash/logstash.yaml

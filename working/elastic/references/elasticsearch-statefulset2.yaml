@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+  labels:
+    service: elasticsearch
+spec:
+  serviceName: es
+  replicas: 1
+  selector:
+    matchLabels:
+      service: elasticsearch
+  template:
+    metadata:
+      labels:
+        service: elasticsearch
+    spec:
+      terminationGracePeriodSeconds: 300
+      containers:
+      - name: elasticsearch
+        image: sres.web.boeing.com:5000/elasticsearch/elasticsearch:8.5.3 #sres.web.boeing.com:5000/3472487/elasticsearch:8.6.2
+        ports:
+        - containerPort: 9200
+          name: http
+        - containerPort: 9300
+          name: tcp
+        # NOTE: you can increase this resources
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 16Gi
+        env:
+          # NOTE: the cluster name; update this
+          - name: cluster.name
+            value: elasticsearch
+          - name: node.name
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: ES_JAVA_OPTS
+            value: -Xms4g -Xmx4g
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            readOnly: true
+            subPath: elasticsearch.yml
+          - name: elasticsearch-persistent-storage1
+            mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: config
+          configMap:
+            name: elasticsearch-config
+  volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-persistent-storage1
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50Gi
+        storageClassName: ocs-storagecluster-ceph-rbd0

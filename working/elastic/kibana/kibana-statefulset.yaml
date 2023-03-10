@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: elk
+  name: kibana-node
+  labels:
+    app: kibana
+    #role: data
+spec:
+  serviceName: "kibana"
+  selector:
+    matchLabels:
+      app: kibana
+  replicas: 1
+  setVmMaxMapCount: false
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: sres.web.boeing.com:5000/kibana/kibana:8.5.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 5601
+          env:
+          - name: ELASTICSEARCH_HOSTS
+            value: "http://elasticsearch.apps.kcs4-prod-ewd.k8s.boeing.com/"
+          - name: ELASTICSEARCH_USER
+            value: "kibana"
+          - name: ELASTICSEARCH_PASSWORD
+            valueFrom: 
+              secretKeyRef:
+                name: elasticsearch-pw-kibana
+                key: password
+          - name: CLUSTER_NAME
+            value: docker-cluster
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/kibana/config/kibana.yml
+              readOnly: true
+              subPath: kibana.yml
+          #readinessProbe:
+          #  httpGet:
+          #    path: /api/status
+          #    port: http
+          #  initialDelaySeconds: 20
+          #  timeoutSeconds: 5
+      volumes:
+        - name: config
+          configMap:
+            name: kibana-config
