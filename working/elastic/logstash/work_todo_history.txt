@@ -1,0 +1,6 @@
+ip_availiabilt_processed.csv
+util_additional.csv
+
+후처리를 아래 파일에서 한다.
+
+https://git.web.boeing.com/bketc_cc/bca_cc/CTAMY/-/tree/main/777/python_ws/script

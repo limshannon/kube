@@ -18,6 +18,8 @@ data:
     xpack.security.authc.api_key.cache.max_keys: 10000
     xpack.security.authc.api_key.cache.hash_algo: "ssha256"
     xpack.monitoring.collection.enabled: true
+    discovery.type: single-node	
+    discovery.seed_hosts: ["node-1"]
     
     #xpack.security.http.ssl.enabled: true
     #xpack.security.transport.ssl.enabled: true

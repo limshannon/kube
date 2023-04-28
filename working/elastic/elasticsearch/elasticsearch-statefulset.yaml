@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: elasticsearch
-          image: sres.web.boeing.com:5000/elasticsearch/elasticsearch:8.5.3
+          image: sres.web.boeing.com:5000/elasticsearch/elasticsearch:8.7.0
           imagePullPolicy: IfNotPresent
           resources:
             limits:
@@ -32,7 +32,7 @@ spec:
             - name: discovery.type
               value: single-node
             - name: "ES_JAVA_OPTS"
-              value: "-Xms2g -Xmx2g"
+              value: "-Xms512m -Xmx512m"
           ports:
             - name: rest
               containerPort: 9200
@@ -43,7 +43,7 @@ spec:
               mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
               readOnly: true
               subPath: elasticsearch.yml
-            - name: elasticsearch-persistent-storage
+            - name: elasticsearch-persistent-storage1
               mountPath: /usr/share/elasticsearch/data
       volumes:
         - name: config
@@ -51,7 +51,7 @@ spec:
             name: elasticsearch-config
   volumeClaimTemplates:
   - metadata:
-      name: elasticsearch-persistent-storage
+      name: elasticsearch-persistent-storage1
     spec:
       accessModes:
         - ReadWriteOnce

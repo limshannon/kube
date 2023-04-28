@@ -107,7 +107,8 @@ RUN pip3 install ${PIP_OPTS} \
       pyLDAvis \
 	  jsonschema[format-nongpl]\
 	  ipywidgets \
-	  jupyterterminals
+	  jupyterterminals notebook zsh_jupyter_kernel
+	  
 
 
 RUN pip3 install ${PIP_OPTS} sqlalchemy psycopg2

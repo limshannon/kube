@@ -1,4 +1,44 @@
+# password setup
+``` 
+sh-5.0$ ./elasticsearch-setup-passwords -v auto
+******************************************************************************
+Note: The 'elasticsearch-setup-passwords' tool has been deprecated. This       command will be removed in a future release.
+******************************************************************************
+
+Initiating the setup of passwords for reserved users elastic,apm_system,kibana,kibana_system,logstash_system,beats_system,remote_monitoring_user.
+The passwords will be randomly generated and printed to the console.
+Please confirm that you would like to continue [y/N]y
+
+
+Changed password for user apm_system
+PASSWORD apm_system = 79sq28fAuOJEtRmy1jre
+
+Changed password for user kibana_system
+PASSWORD kibana_system = FHLg1EqmZ8MzUKpv7ePg
+
+Changed password for user kibana
+PASSWORD kibana = FHLg1EqmZ8MzUKpv7ePg
+
+Changed password for user logstash_system
+PASSWORD logstash_system = MXnLKhAnp5xxER8HVpgx
+
+Changed password for user beats_system
+PASSWORD beats_system = Qy9YjDNSHo4aCKp3HHZx
+
+Changed password for user remote_monitoring_user
+PASSWORD remote_monitoring_user = I7PWJGD8QPeg4Ish6oUR
+
+Changed password for user elastic
+PASSWORD elastic = ukLyRceDllX1xdTPQ5xu
+
+```
+
+
+
+
 ===== 1. extract & reset password  ======
+
+
 
 kubectl exec -it elasticsearch-node-0 -n elk -- bin/elasticsearch-setup-passwords auto -b
 kubectl exec -it elasticsearch-node-0 -n bketc-elk -- bin/elasticsearch-setup-passwords auto -b
@@ -40,28 +80,28 @@ PASSWORD elastic = 3A8FB328Nf3SwfEL2H6w
 
 
 
->>>
+>>> elk (2023-03-21)
+C:\Users\fv631f>kubectl exec -it elasticsearch-node-0 -n elk -- bin/elasticsearch-setup-passwords auto -b
 Changed password for user apm_system
-PASSWORD apm_system = Tmjj0RctgpoFsFOBDnuh
+PASSWORD apm_system = FzQpW0XepFeKrHh5OLD4
 
 Changed password for user kibana_system
-PASSWORD kibana_system = fic7hRHEEYamJvQn5kCj
+PASSWORD kibana_system = g02F7117ayQzUnvEcQpU
 
 Changed password for user kibana
-PASSWORD kibana = fic7hRHEEYamJvQn5kCj
+PASSWORD kibana = g02F7117ayQzUnvEcQpU
 
 Changed password for user logstash_system
-PASSWORD logstash_system = OoGBwiqM6aziWSbicpyM
+PASSWORD logstash_system = XDD3jOAZeF7DsKJnQgC2
 
 Changed password for user beats_system
-PASSWORD beats_system = uDvqrPGjB9rJtU7VFZSC
+PASSWORD beats_system = 3Hsc7Ogba47gLyTQMQUM
 
 Changed password for user remote_monitoring_user
-PASSWORD remote_monitoring_user = p15CmQ68mPheYHvUYsX6
+PASSWORD remote_monitoring_user = xradKaqmvDHY2j7QR2s4
 
 Changed password for user elastic
-PASSWORD elastic = i42E6eAQZyMwYwfFabAl
-
+PASSWORD elastic = rdGJ85KVq5s43vG9lxOA
 
 
 

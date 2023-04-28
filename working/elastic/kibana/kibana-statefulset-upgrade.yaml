@@ -19,15 +19,22 @@ spec:
         app: kibana
     spec:
       containers:
-        - name: kibana
+        - name: "kibana"
           image: sres.web.boeing.com:5000/kibana/kibana:8.6.2
           imagePullPolicy: IfNotPresent
+          resources:
+              requests:
+                  memory: "1Gi"
+                  cpu: "250m"
+              limits:
+                  memory: "2Gi"
+                  cpu: "1000m"
           ports:
             - name: http
               containerPort: 5601
           env:
           - name: ELASTICSEARCH_HOSTS
-            value: "http://elasticsearch.apps.kcs4-prod-ewd.k8s.boeing.com/"
+            value: "http://elasticsearch.apps.kcs4-prod-ewd.k8s.boeing.com/" # or 'http://175.1.67.49:9200'
           - name: ELASTICSEARCH_USER
             value: "kibana"
           - name: ELASTICSEARCH_PASSWORD
